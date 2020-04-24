@@ -1,4 +1,4 @@
-# UGC_graduates
+# Gender Balance among Graduates of UGC-funded Programmes
 
 Every year some 28'500 students graduate from programmes funded by the [University Grants Committee](https://www.ugc.edu.hk/eng/ugc/index.html) (UGC) in Hong Kong. Are male and female students equally represented among the graduates?  
 
