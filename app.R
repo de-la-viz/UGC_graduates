@@ -7,6 +7,10 @@
 #    http://shiny.rstudio.com/
 #
 
+
+# TO DO:
+#   use functions for the plots (2 functions)
+
 #########################
 # Data load and cleanup #
 #########################
@@ -21,6 +25,7 @@ library(rio) # good package for importing data
 library(stringr) # to use str_sub and extract year from academic year
 library(forcats) # for fct_rev to reverse factor levels
 library(scales) # for scales as percentages
+library(shinythemes) # change the theme of the app
 
 # Import data
 graduates <- rio::import("data/Graduates2(Eng).csv") %>%
@@ -47,6 +52,8 @@ my_palette <- c("#383D3B", "#52DEE5", "#B3B3F1", "#FF220C", "#BEEF9E")
 
 # generic line initiating the UI
 ui <- shinyUI(fluidPage(
+  # change theme:
+  theme = shinytheme("slate"),
   
   # Add a title
   titlePanel("Gender Balance among Graduates of UGC-funded Programmes"),
@@ -57,7 +64,8 @@ ui <- shinyUI(fluidPage(
     
     # beginning of sidebar section
     sidebarPanel(
-      em("Francois Delavy, April 2020")
+      em("Francois Delavy, April 2020"),
+      width = 12
     ),
     
     # beginning of main section
@@ -282,7 +290,7 @@ server <- shinyServer(function(input, output) {
       geom_col(aes(fill = Gender)) +
       geom_text(aes(label = paste0(round(100 * percentage, 1), "%") ), position = position_stack(vjust = 0.5)) +
       theme_minimal() + 
-      geom_abline(slope = 0, intercept = 0.5,  col = my_palette[1], lty = 2) +
+      geom_abline(slope = 0, intercept = 0.5,  col = "#e9ecef", lty = 2) +
       coord_flip() + 
       labs(
         title = paste0("The Gender Balance by ", input$y_axis),
@@ -295,7 +303,10 @@ server <- shinyServer(function(input, output) {
       ) +
       scale_fill_manual(values = my_palette[2:3]) +
       scale_y_continuous(labels = scales::percent, breaks = c(0.5)) + # keep only the 50%
-      theme(text = element_text(size = 18)) # larger font
+      theme(
+        text = element_text(size = 18, color = "#e9ecef"),
+        axis.text = element_text(color = "#e9ecef"),
+        plot.background = element_rect(fill = "#272B30", color = "#272B30"))
   })
   
   
@@ -362,7 +373,10 @@ server <- shinyServer(function(input, output) {
         y = input$num_or_perc_cat
       ) + 
       scale_color_manual(values = my_palette[2:3]) + 
-      theme(text = element_text(size = 18)) # larger font
+      theme(
+        text = element_text(size = 18, color = "#e9ecef"),
+        axis.text = element_text(color = "#e9ecef"),
+        plot.background = element_rect(fill = "#272B30", color = "#272B30"))    
     # change the scale of y-axis for percentages
     if ("Percentage" %in% input$num_or_perc_cat) {
       p <- p + 
@@ -436,7 +450,10 @@ server <- shinyServer(function(input, output) {
         y = input$num_or_perc_level
       ) + 
       scale_color_manual(values = my_palette[2:3]) + 
-      theme(text = element_text(size = 18)) # larger font
+      theme(
+        text = element_text(size = 18, color = "#e9ecef"),
+        axis.text = element_text(color = "#e9ecef"),
+        plot.background = element_rect(fill = "#272B30", color = "#272B30"))
     # change the scale of y-axis for percentages
     if ("Percentage" %in% input$num_or_perc_level) {
       p <- p + 
@@ -461,7 +478,7 @@ server <- shinyServer(function(input, output) {
       geom_col(aes(fill = Gender), position = "fill") +
       geom_text(aes(label = paste0(round(100 * percentage, 1), "%") ), position = position_stack(vjust = 0.5)) +
       theme_minimal() +
-      geom_abline(slope = 0, intercept = 0.5,  col = my_palette[1], lty = 2) +
+      geom_abline(slope = 0, intercept = 0.5,  col = "#e9ecef", lty = 2) +
       coord_flip() +
       labs(
         title = "The gender balance varies greatly by APC",
@@ -470,8 +487,11 @@ server <- shinyServer(function(input, output) {
       ) +
       scale_fill_manual(values = my_palette[2:3]) +
       scale_y_continuous(labels = scales::percent, breaks = c(0.5)) + # keep only the 50%
-      theme(text = element_text(size = 16)) # larger font
-  })
+      theme(
+        text = element_text(size = 16, color = "#e9ecef"),
+        axis.text = element_text(color = "#e9ecef"),
+        plot.background = element_rect(fill = "#272B30", color = "#272B30"))  
+    })
   
   output$engineering <- renderPlot({
     graduates %>% 
@@ -490,8 +510,11 @@ server <- shinyServer(function(input, output) {
         y = "Number of Graduates"
       ) + 
       scale_color_manual(values = my_palette[2:3]) +
-      theme(text = element_text(size = 16)) # larger font
-  })
+      theme(
+        text = element_text(size = 16, color = "#e9ecef"),
+        axis.text = element_text(color = "#e9ecef"),
+        plot.background = element_rect(fill = "#272B30", color = "#272B30"))
+    })
   
   output$leaky_pipeline <- renderPlot({
     graduates %>% 
@@ -504,7 +527,7 @@ server <- shinyServer(function(input, output) {
       ) +
       geom_col(aes(fill = Gender), position = "stack") +
       geom_text(aes(label = paste0(round(100 * percentage, 1), "%") ), position = position_stack(vjust = 0.5)) +
-      geom_abline(slope = 0, intercept = 0.5,  col = my_palette[1], lty = 2) + 
+      geom_abline(slope = 0, intercept = 0.5,  col = "#e9ecef", lty = 2) + 
       theme_minimal() +
       labs(
         title = "The Research Postgraduate level is the only level\nwhere female graduates are in minority",
@@ -515,8 +538,11 @@ server <- shinyServer(function(input, output) {
       scale_fill_manual(values = my_palette[2:3]) +
       scale_x_discrete(limits = rev(levels(graduates$Level))) +
       scale_y_continuous(labels = scales::percent, breaks = c(0.5)) + # keep only the 50%
-      theme(text = element_text(size = 16)) # larger font
-  })
+      theme(
+        text = element_text(size = 16, color = "#e9ecef"),
+        axis.text = element_text(color = "#e9ecef"),
+        plot.background = element_rect(fill = "#272B30", color = "#272B30"))  
+    })
   
   # Close the server definition
 })
