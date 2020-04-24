@@ -6,7 +6,10 @@ Using open data found on [data.gov.hk](https://data.gov.hk/en-data/dataset/hk-ug
 
 The results are presented in a Shiny app, so that everyone can explore the data. Key observations are also documented.  
 
-The app is deployed [there](tbd).
+The app is deployed [there](tbd).  
+
+## Preview
+![preview](/screenshot.jpg)
 
 ## R Packages used
 shiny, shinythemes, ggplot2, dplyr, stringr, scales, rio, haven, forcats
