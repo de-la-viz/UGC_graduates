@@ -68,7 +68,7 @@ ui <- shinyUI(fluidPage(
     
     # beginning of sidebar section
     sidebarPanel(
-      em("Francois Delavy, May 2020"),
+      em("Francois Delavy, May 2020 | ", a(href = "https://github.com/de-la-viz/UGC_graduates", "code on Github")),
       width = 12
     ),
     
