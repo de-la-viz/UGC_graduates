@@ -36,7 +36,11 @@ graduates <- rio::import("data/Graduates2(Eng).csv") %>%
          Gender = as_factor(Sex),
          Headcount = `Number of Graduates (Headcount)`
   ) %>% # rename and convert to factor
-  select(Year, Gender, Level, Category, Headcount)
+  select(Year, Gender, Level, Category, Headcount) %>%
+  mutate(Category = fct_relevel(Category, # manual relevel for nicer plots
+                                "Arts and Humanities", "Education", "Social Sciences", 
+                                "Medicine, Dentistry and Health", "Business and Management", 
+                                "Sciences", "Engineering and Technology"))
 
 category_names = levels(graduates$Category) # get the names of all categories
 level_names = levels(graduates$Level)  # get the names of all levels
@@ -64,19 +68,20 @@ ui <- shinyUI(fluidPage(
     
     # beginning of sidebar section
     sidebarPanel(
-      em("Francois Delavy, April 2020"),
+      em("Francois Delavy, May 2020"),
       width = 12
     ),
     
     # beginning of main section
     mainPanel(
-      p("Every year some 28'500 students graduate from programmes funded by the ",
+      p("Annually, 28'500 students graduate from programs funded by the ",
         a(href = "https://www.ugc.edu.hk/eng/ugc/index.html", "University Grants Committee"),
-        "(UGC). Are ",
+        "(UGC). The mission of the UGC is to nurture high-quality people to promote the economic and 
+        social development of Hong Kong. Are ",
         span(strong("male"), style = "color:#52DEE5"), 
         " and ",
         span(strong("female"), style = "color:#B3B3F1"), 
-        "students equally represented among the graduates?"),
+        "students equally represented among the graduates who will build the future of Hong-Kong?"),
       
       # several tabs:
       tabsetPanel(
@@ -165,20 +170,21 @@ ui <- shinyUI(fluidPage(
                  
         ),
         
-        tabPanel("Some Observations",
+        tabPanel("Key Observations",
                  
                  br(),
-                 p("We highlight below 3 key observations that we made when exploring the data.
-                   These observations aim at informing decision-makers (UGS programme leads or other policymakers)
-                   or the public on the potential existence of gender imbalances.
-                   We also try to derivate actionable insights for decision-makers."),
+                 p("We highlight 3 key observations that we made when exploring the data.
+                   These actionable insights aim at informing decision-makers: UGS programme leads or other policymakers. 
+                   This project also highlights the importance of open data for democratic 
+                   control of government-funded institutions and for informing the public and politicians."),
                  br(),
                  br(),
                  br(),
                  
                  p(span(strong("The gender balance varies greatly by Academic Programme Category.")), 
-                   "Some categories are dominated by female graduates and others by men."),
-                 p("-> UGC and the higher education institutions could work on uniformizing the gender balance."),
+                   "Some categories are dominated by female graduates and others by male.
+                   On average, over the 10 academic years considered, 54.9% of the graduates were women."),
+                 # p("-> UGC and the higher education institutions could work on uniformizing the gender balance."),
                  plotOutput("imbalance_by_APC"),
                  br(),
                  br(),
@@ -186,8 +192,9 @@ ui <- shinyUI(fluidPage(
                  
                  p(span(strong("The gender imbalance in Engineering and Technology is increasing.")), 
                    "Despite the overall growth of the number of graduates, 
-                   the number of female graduates has remained stable."),
-                 p("-> UGC and the higher education institutions could act to try reversing the trend."),
+                   the number of female graduates has remained stable.
+                   The percentage of men went up from to 63.8% in 2009/10 to 69.5% in 2018/19."),
+                 # p("-> UGC and the higher education institutions could act to try reversing the trend."),
                  plotOutput("engineering"),
                  br(),
                  br(),
@@ -197,12 +204,14 @@ ui <- shinyUI(fluidPage(
                    Undergraduate and Taught Postgraduate levels, 
                    whereas the majority of graduates are males for the Research Postgraduate level.")), 
                    "This finding is similar to what is observed in several other countries 
-                   and might be an indication that there is a 'leaky pipeline' effect 
-                   (see for instance ",
+                   and might be an indication that there is a 'leaky pipeline' effect: the fact that women 
+                   tend to be less and less represented within researcher population with age (or experience, career level). 
+                   See for instance the ",
                    a(href = "https://euraxess.ec.europa.eu/worldwide/japan/status-update-gender-equality-research-careers-europe-she-figures-2018",
-                     "European She Figures 2018"), ")."),
-                 p("-> UGC could work on attracting more males to lower levels of study and 
-                     retaining more females at the highest level of study."),
+                     "European She Figures 2018"), ".
+                   "),
+                 # p("-> UGC could work on attracting more males to lower levels of study and 
+                 #     retaining more females at the highest level of study."),
                  plotOutput("leaky_pipeline"),
                  br(),
                  br(),
@@ -215,7 +224,9 @@ ui <- shinyUI(fluidPage(
                    a(href = "https://data.gov.hk/en-data/dataset/hk-ugc-ugc-student-graduates2", "data.gov.hk"),                 
                    ". Alternatively, the same data are also found on the",
                    a(href = "https://cdcf.ugc.edu.hk/cdcf/searchStatSiteReport.action", "UGC website"),
-                   "in PDF format."
+                   "in PDF format, and ",
+                   a(href = "www.ugcs.gov.hk/datagovhk/Graduates2_data_dictionary_en.docx", "here"),
+                   "is a data dictionary."
                  ),   
                  
                  p("UGC shares the number of graduates (Headcount) along with several variables:"),
@@ -223,7 +234,7 @@ ui <- shinyUI(fluidPage(
                    tags$li("Sex (gender): Male, Female"), 
                    tags$li("Level of Study: Sub-degree, Undergraduate, Taught Postgraduate, Research Postgraduate"), 
                    tags$li("Broad Academic Programme Category: Medicine, Dentistry and Health; Sciences; Engineering and Technology; Business and Management; Social Sciences; Arts and Humanities, Education"),
-                   tags$li("Academic Year: YYYY/YY, from 2009/10 to 2018/19")
+                   tags$li("Academic Year: YYYY/YY, from 2009/10 to 2018/19. We show only the first year of the academic year in the plots.")
                  ),
                  
                  p("Since some UGC-funded programmes are mapped to more than one Academic Programme Category (APC), graduate numbers of these programmes are counted across the APCs concerned on a pro-rata basis. The decimal figures are rounded to the nearest whole number."),   

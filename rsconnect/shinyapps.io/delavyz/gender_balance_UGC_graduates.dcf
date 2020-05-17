@@ -1,0 +1,12 @@
+name: gender_balance_UGC_graduates
+title: gender_balance_UGC_graduates
+username:
+account: delavyz
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2310045
+bundleId: 3155077
+url: https://delavyz.shinyapps.io/gender_balance_UGC_graduates/
+when: 1589638624.32568
+asMultiple: FALSE
+asStatic: FALSE
